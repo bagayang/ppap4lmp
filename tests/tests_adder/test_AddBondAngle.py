@@ -13,7 +13,7 @@ import numpy as np
 from random import randrange
 
 from ppap4lmp import (
-  create, AddMap, AddAngle,
+  create, AddMap, AddBondAngle,
   StaCustom, StaDumpAtoms, StaMolecules, StaBeads)
 
 def convert_to_deg(rad):
@@ -23,13 +23,13 @@ def compute_angle(v1, v2):
   return convert_to_deg(
     np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1)*np.linalg.norm(v2))))
 
-class TestAddAngle(unittest.TestCase):
+class TestAddBondAngle(unittest.TestCase):
 
-  def test_single_angle(self):
+  def test_single_bond_angle(self):
 
-    right_angle = 45.0
+    right_bond_angle = 45.0
 
-    angles_py = [
+    bond_angles_py = [
       {"id": 1, "atom1-id": 1, "atom2-id": 2, "atom3-id": 3}
     ]
 
@@ -39,21 +39,21 @@ class TestAddAngle(unittest.TestCase):
       {"id": 3, "xu": 1.0, "yu": 1.0, "zu": 1.0},
     ]
 
-    angles = create(StaCustom(angles_py))
+    bond_angles = create(StaCustom(bond_angles_py))
     atoms = create(StaCustom(atoms_py))
-    angles.append_updater(AddAngle(atoms))
+    bond_angles.append_updater(AddBondAngle(atoms))
 
     self.assertTrue(np.allclose(
-      convert_to_deg(angles.get_data()[0]["angle"]), right_angle))
+      convert_to_deg(bond_angles.get_data()[0]["angle"]), right_bond_angle))
 
-  def test_sequence_angles(self):
+  def test_sequence_bond_angles(self):
 
-    right_angles = np.random.uniform(0.0, 180.0, 100000)
+    right_bond_angles = np.random.uniform(0.0, 180.0, 100000)
 
     lo = -100.0
     hi = 100.0
 
-    angles_py = []
+    bond_angles_py = []
 
     atoms_py = [{
       "id": 1,
@@ -72,9 +72,9 @@ class TestAddAngle(unittest.TestCase):
       "zu": atoms_py[0]["zu"] + length_12 * vec_1to2[2],
     }) # set position of the second atom
 
-    for i, angle in enumerate(right_angles):
+    for i, bond_angle in enumerate(right_bond_angles):
       """
-      `angle` consists of `i`-, `i+1`- and `i+2`-th atoms.
+      `bond_angle` consists of `i`-, `i+1`- and `i+2`-th atoms.
       Position of the `i+2`-th atom should be determined here.
       """
       r1 = np.array([
@@ -93,10 +93,10 @@ class TestAddAngle(unittest.TestCase):
       # normal vector of a plane defined by `vec_2to1` and `vec_2to3`
       n_vec = np.cross(vec_2to3, vec_2to1)
 
-      # angle defined by `vec_2to1` and `vec_2to3`
-      angle_tmp = compute_angle(vec_2to1, vec_2to3)
+      # bond_angle defined by `vec_2to1` and `vec_2to3`
+      bond_angle_tmp = compute_angle(vec_2to1, vec_2to3)
 
-      vec_2to3_rotated = rotate_vector(vec_2to3, n_vec, angle_tmp-angle)
+      vec_2to3_rotated = rotate_vector(vec_2to3, n_vec, bond_angle_tmp-bond_angle)
 
       atoms_py.append({
         "id": i+3,
@@ -105,26 +105,26 @@ class TestAddAngle(unittest.TestCase):
         "zu": r2[2] + vec_2to3_rotated[2],
       }) # set right position of the third atom
 
-      angles_py.append({
+      bond_angles_py.append({
         "id": i+1 ,
         "atom1-id": i+1,
         "atom2-id": i+2,
         "atom3-id": i+3
       })
 
-    angles = create(StaCustom(angles_py))
+    bond_angles = create(StaCustom(bond_angles_py))
     atoms = create(StaCustom(atoms_py))
-    angles.append_updater(AddAngle(atoms))
+    bond_angles.append_updater(AddBondAngle(atoms))
 
     self.assertTrue(
-      np.allclose(right_angles, convert_to_deg(angles.get_1d_float("angle"))))
+      np.allclose(right_bond_angles, convert_to_deg(bond_angles.get_1d_float("angle"))))
 
 if __name__ == "__main__":
 
   suite = unittest.TestSuite()
 
-  suite.addTest(TestAddAngle("test_single_angle"))
-  suite.addTest(TestAddAngle("test_sequence_angles"))
+  suite.addTest(TestAddBondAngle("test_single_bond_angle"))
+  suite.addTest(TestAddBondAngle("test_sequence_bond_angles"))
 
   runner = unittest.TextTestRunner()
   runner.run(suite)

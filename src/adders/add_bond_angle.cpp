@@ -1,19 +1,19 @@
 /*!
-  @file src/adders/add_angle.cpp
-  @brief This file has an implementation of AddAngle class,
+  @file src/adders/add_bond_angle.cpp
+  @brief This file has an implementation of AddBondAngle class,
   which is a subclass of Adder class.
   @author Yang Juntao
   @date 2018/12/20
 */
 
-#include "add_angle.h"
+#include "add_bond_angle.h"
 #include "../utils/map_to_index.h"
 
 namespace ut = utils;
 
 /* ------------------------------------------------------------------ */
 
-AddAngle::AddAngle(
+AddBondAngle::AddBondAngle(
   const ElPtr &elem)
 {
   ext_generator = elem;
@@ -21,7 +21,7 @@ AddAngle::AddAngle(
 
 /* ------------------------------------------------------------------ */
 
-void AddAngle::compute_impl(
+void AddBondAngle::compute_impl(
   Json &data,
   DataKeys &datakeys)
 {

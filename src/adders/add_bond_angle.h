@@ -1,18 +1,18 @@
 /*!
-  @file src/adders/add_angle.h
-  @brief This file has a definition of AddAngle class,
+  @file src/adders/add_bond_angle.h
+  @brief This file has a definition of AddBondAngle class,
   which is a subclass of Adder class.
   @author Yang Juntao
   @date 2018/12/20
 */
 
-#ifndef ADD_ANGLE_H
-#define ADD_ANGLE_H
+#ifndef ADD_BOND_ANGLE_H
+#define ADD_BOND_ANGLE_H
 
 #include <adders/adder.h>
 
 /*!
-  @brief AddAngle adds center of mass to an Element object
+  @brief AddBondAngle adds center of mass to an Element object
   as its unwrapped position.
 
   An object of this class computes center of mass
@@ -30,9 +30,9 @@
   the \e child is created earlier than the \e parent.
 
   About usage in Python,
-  please see pybind::py_add_angle.
+  please see pybind::py_add_bond_angle.
 */
-class AddAngle : public Adder {
+class AddBondAngle : public Adder {
 
  protected:
   /*!
@@ -59,7 +59,7 @@ class AddAngle : public Adder {
     DataKeys &datakeys) override;
  public:
   /*!
-    @brief Constructor of AddAngle class.
+    @brief Constructor of AddBondAngle class.
 
     @param elem
     @parblock
@@ -78,9 +78,9 @@ class AddAngle : public Adder {
       </dl>
     @endparblock
   */
-  AddAngle(
+  AddBondAngle(
     const ElPtr &elem);
-  virtual ~AddAngle() = default;
+  virtual ~AddBondAngle() = default;
 };
 
 #endif
